@@ -38,7 +38,9 @@
         <rect x="18.486" y="33.038" width="10.583" height="5.2917" fill="#fff" stroke="#000" stroke-width=".265" />
         <text x="23.756287" y="37.020153" fill="#000000" font-family="sans-serif" font-size="10.583px"
             letter-spacing="0px" stroke-width=".26458" text-align="center" text-anchor="middle" word-spacing="0px"
-            style="line-height:1.25" xml:space="preserve"><tspan id="label" font-size="3.5278px" label="">0%</tspan></text>
+            style="line-height:1.25" xml:space="preserve">
+            <tspan id="label" font-size="3.5278px" label="">0%</tspan>
+        </text>
     </svg>
 
     <!-- Bar Chart -->
@@ -57,8 +59,10 @@
     <svg height="200" width="200" viewBox="0 0 200 200">
         <circle r="100" cx="100" cy="100" fill="#ddd" />
         <circle id="pie" r="50" cx="100" cy="100" fill="transparent" stroke="#0074d9" stroke-width="100"
-            stroke-dasharray="calc(1 * 314 / 100) 314" transform="rotate(-90) translate(-200)" />
+            stroke-dasharray="calc(10 * 314 / 100) 314" transform="rotate(-90) translate(-200)" />
     </svg>
+
+    <div id="table"></div>
 
     <script>
         // Gauge
@@ -111,6 +115,16 @@
             var percentage = Math.round(Math.random() * 100);
             pie.style.strokeDasharray = "calc(" + percentage + " * 314 / 100) 314";
         }, 2000)
+
+        fetch("http://localhost:3000/weather")
+            .then(x => x.json())
+            .then(x => {
+               
+                $("div").dxButton();
+                
+                console.log(window)
+                console.log(x)
+            })
     </script>
 </body>
 
