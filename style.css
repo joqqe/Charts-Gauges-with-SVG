@@ -46,12 +46,16 @@ body {
     box-shadow: 0 0.5rem 1.7rem 0 rgba(0,0,0,.5);
 }
 
+#forecast #forecast-title {
+    margin-top: 0;
+}
+
 #forecast #forecast-controls {
     padding: 0;
     list-style-type: none;
     display: flex;
     justify-content: center;
-    margin: 0 auto;
+    margin: 3rem auto 0 auto;
 }
 
 #forecast #forecast-controls > * {
@@ -74,4 +78,8 @@ body {
 #forecast #forecast-controls > *:hover {
     background-color: white;
     color: #293a4b;
+}
+
+#forecast #forecast-chart {
+    margin-top: 3rem;
 }

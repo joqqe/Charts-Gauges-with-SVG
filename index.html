@@ -20,7 +20,8 @@
         </div>
 
         <div id="temp">
-            <svg id="temp-icon" version="1.1" height="150" width="150" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <svg id="temp-icon" version="1.1" height="150" width="150" viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg">
                 <g transform="translate(0 -270.54)">
                     <path transform="translate(0 270.54)"
                         d="m50 15c-5.54 0-10 4.46-10 10v33.844a15 15 0 0 0-5 11.156 15 15 0 0 0 15 15 15 15 0 0 0 15-15 15 15 0 0 0-5-11.16v-33.84c0-5.54-4.46-10-10-10z"
@@ -58,13 +59,19 @@
             <li>Wind</li>
         </ul>
 
-        <div id="forecast-chart">
-
-        </div>
+        <svg id="forecast-chart" version="1.1" viewBox="0 0 450 150" xmlns="http://www.w3.org/2000/svg">
+            <g fill="none" stroke="#808080" stroke-width="1px">
+                <path d="m45 15h390" />
+                <path d="m45 40h390" />
+                <path d="m45 65h390" />
+                <path d="m45 90h390" />
+                <path d="m45 115h390" />
+            </g>
+        </svg>
     </div>
 
     <script>
-        var updateWeather = function(icon, description) {
+        var updateWeather = function (icon, description) {
             var weatherIcon = document.querySelector("#weather-icon use");
             var weatherLabel = document.querySelector("#weather-label");
 
@@ -72,7 +79,7 @@
             weatherLabel.textContent = description;
         }
 
-        var updateTemperature = function(temperature) {
+        var updateTemperature = function (temperature) {
             var tempIcon = document.querySelector("#temp-icon #bar");
             var tempCircle = document.querySelector("#temp-icon #circle");
             var tempLabel = document.querySelector("#temp-label");
@@ -94,10 +101,10 @@
             if (temperature <= (maxTemp / 3)) {
                 fColor = "blue";
             }
-            if (temperature > (maxTemp / 3) && temperature < (maxTemp / 3) * 2) {
+            else if (temperature > (maxTemp / 3) && temperature < (maxTemp / 3) * 2) {
                 fColor = "orange";
             }
-            if (temperature >= (maxTemp / 3) * 2) {
+            else if (temperature >= (maxTemp / 3) * 2) {
                 fColor = "red";
             }
             tempIcon.style.fill = fColor;
@@ -105,7 +112,7 @@
             tempLabel.textContent = temperature + "°C";
         }
 
-        var updateWind = function(direction, description) {
+        var updateWind = function (direction, description) {
             var windIcon = document.querySelector("#wind-icon use");
             var windLabel = document.querySelector("#wind-label");
 
@@ -115,11 +122,36 @@
             windLabel.textContent = description;
         }
 
+        var updateChart = function () {
+            var forecastChart = document.querySelector("#forecast-chart");
+            
+            var lowestBar = document.querySelector("#forecast-chart path:last-child");
+            var lowestBarC = lowestBar.getBBox();
+            var highestBar = document.querySelector("#forecast-chart path:first-child");
+            var highestBarC = highestBar.getBBox();
+            
+            var columnWidth = lowestBarC.width / 7;
+
+            var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.style.stroke = "black";
+            path.style.strokeWidth = "1.0";
+            path.style.fill = "none";
+
+            var d = "M " + (lowestBarC.x + columnWidth / 2) + " " + lowestBarC.y;
+            for (let i = 1; i < 7; i++) {
+                d += " L " + (lowestBarC.x  + (columnWidth / 2) + (columnWidth * i)) + " " + (Math.random() * 30 + 50);
+            }
+            path.setAttribute("d", d);
+
+            forecastChart.prepend(path);
+        }
+
         setTimeout(() => {
             updateWeather("sun-overcast", "Slightly overcast");
-            updateTemperature(11);
+            updateTemperature(15);
             updateWind("115", "4 < 5 Bft");
-        }, 3000);
+            updateChart();
+        }, 1500);
     </script>
 </body>
 
