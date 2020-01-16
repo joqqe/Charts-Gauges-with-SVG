@@ -16,12 +16,11 @@
                 <use xlink:href="/icons/_icons.svg#sun"></use>
             </svg>
 
-            <h4 id="weather-label" class="overview-label">Sun</h4>
+            <h4 id="weather-label" class="overview-label">?</h4>
         </div>
 
         <div id="temp">
-            <svg id="temp-icon" version="1.1" height="150" width="150" viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg">
+            <svg id="temp-icon" version="1.1" height="150" width="150" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <g transform="translate(0 -270.54)">
                     <path transform="translate(0 270.54)"
                         d="m50 15c-5.54 0-10 4.46-10 10v33.844a15 15 0 0 0-5 11.156 15 15 0 0 0 15 15 15 15 0 0 0 15-15 15 15 0 0 0-5-11.16v-33.84c0-5.54-4.46-10-10-10z"
@@ -50,11 +49,14 @@
     </div>
 
     <div id="forecast">
-        <h4 id="forecast-title">Verwachtingen 7 dagen</h4>
+        <h1 id="forecast-title">Verwachtingen 7 dagen</h1>
 
-        <div id="forecast-controls">
-
-        </div>
+        <ul id="forecast-controls">
+            <li>Max Temp</li>
+            <li>Min temp</li>
+            <li>Neerslag</li>
+            <li>Wind</li>
+        </ul>
 
         <div id="forecast-chart">
 
@@ -62,7 +64,7 @@
     </div>
 
     <script>
-        var updateWeather = function (icon, description) {
+        var updateWeather = function(icon, description) {
             var weatherIcon = document.querySelector("#weather-icon use");
             var weatherLabel = document.querySelector("#weather-label");
 
@@ -70,7 +72,7 @@
             weatherLabel.textContent = description;
         }
 
-        var updateTemperature = function (temperature) {
+        var updateTemperature = function(temperature) {
             var tempIcon = document.querySelector("#temp-icon #bar");
             var tempCircle = document.querySelector("#temp-icon #circle");
             var tempLabel = document.querySelector("#temp-label");
@@ -88,7 +90,7 @@
             tempIcon.style.transform = "scaleY(" + scalePercentage + ")";
             tempIcon.style.transition = "transform 1s ease, fill  1s ease";
             tempCircle.style.transition = "transform 1s ease, fill  1s ease";
-            
+
             if (temperature <= (maxTemp / 3)) {
                 fColor = "blue";
             }
@@ -103,7 +105,7 @@
             tempLabel.textContent = temperature + "°C";
         }
 
-        var updateWind = function (direction, description) {
+        var updateWind = function(direction, description) {
             var windIcon = document.querySelector("#wind-icon use");
             var windLabel = document.querySelector("#wind-label");
 
