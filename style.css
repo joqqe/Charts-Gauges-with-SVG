@@ -1,6 +1,35 @@
-#header {
+body {
+    margin:0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    background: url("./images/background.jpeg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    overflow: hidden;
+}
+
+#overview {
+    width: 1000px;
+    margin: auto;
+    margin-top: 5rem;
+    background-color: white;
+    box-shadow: 0 0.5rem 1.7rem rgba(0,0,0,.5);
     display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    grid-template-areas: "weather temp wind";
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    justify-items: center;
+}
+
+#overview .overview-label {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 0;
+}
+
+#forecast {
+    background-color: white;
+    width: 1000px;
+    margin: auto;
 }

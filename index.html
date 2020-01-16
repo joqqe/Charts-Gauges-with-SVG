@@ -10,38 +10,101 @@
 </head>
 
 <body>
-    <div id="header">
+    <div id="overview">
         <div id="weather">
-            <svg height="100" width="100">
+            <svg id="weather-icon" height="150" width="150">
                 <use xlink:href="/icons/_icons.svg#sun"></use>
             </svg>
+
+            <h4 id="weather-label" class="overview-label">Light rain</h4>
         </div>
 
         <div id="temp">
+            <svg id="temp-icon" version="1.1" height="150" width="150" viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg">
+                <g transform="translate(0 -270.54)">
+                    <path transform="translate(0 270.54)"
+                        d="m50 15c-5.54 0-10 4.46-10 10v33.844a15 15 0 0 0-5 11.156 15 15 0 0 0 15 15 15 15 0 0 0 15-15 15 15 0 0 0-5-11.16v-33.84c0-5.54-4.46-10-10-10z"
+                        fill="none" stroke="#000018" stroke-width="1.0016" />
+                    <rect id="bar" x="45" y="290.54" width="10" height="45" ry="5" fill="#00f" />
+                    <circle cx="50" cy="340.54" r="10" fill="#00f" />
+                    <g fill="none" stroke="#000" stroke-width="1px">
+                        <path d="m60 300.54h5" />
+                        <path d="m60 310.54h5" />
+                        <path d="m60 320.54h5" />
+                    </g>
+                </g>
+            </svg>
 
+            <h4 id="temp-label" class="overview-label">20°C</h4>
         </div>
 
         <div id="wind">
-            <svg height="100" width="100">
-                <use style="transform-origin: center; transform:rotate(45deg);" xlink:href="/icons/_icons.svg#wind"></use>
+            <svg id="wind-icon" height="150" width="150">
+                <use xlink:href="/icons/_icons.svg#wind">
+                </use>
             </svg>
+
+            <h4 id="wind-label" class="overview-label">0 Bft</h4>
         </div>
     </div>
 
-    <div id="expectations">
-        <h4>Verwachtingen 7 dagen</h4>
+    <div id="forecast">
+        <h4 id="forecast-title">Verwachtingen 7 dagen</h4>
 
-        <div id="expectations-controls">
+        <div id="forecast-controls">
 
         </div>
 
-        <div id="expectations-chart">
+        <div id="forecast-chart">
 
         </div>
     </div>
 
     <script>
+        var updateWeather = function (icon, description) {
+            var weatherIcon = document.querySelector("#weather-icon use");
+            var weatherLabel = document.querySelector("#weather-label");
 
+            weatherIcon.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "/icons/_icons.svg#" + icon);
+            weatherLabel.textContent = description;
+        }
+
+        var updateTemperature = function (temperature) {
+            var tempIcon = document.querySelector("#temp-icon #bar");
+            var tempLabel = document.querySelector("#temp-label");
+
+            var tempIconC = tempIcon.getBBox();
+            var tempIconXOrigin = tempIconC.x + tempIconC.width;
+            var tempIconYOrigin = tempIconC.y + tempIconC.height;
+            tempIcon.style.transformOrigin = tempIconXOrigin + "px " + tempIconYOrigin + "px";
+            tempIcon.style.transition = "transform 1s ease";
+
+            //percentage * (maxHue - minHue) + minHue
+            var scalePercent = temperature / (30 - 0);
+            var iets = (scalePercent / 1.2) * scalePercent;
+            console.log(scalePercent)
+            console.log(iets)
+            tempIcon.style.transform = "scaleY(" + iets + ")";
+            tempIcon.style.fill = "red";
+            tempLabel.textContent = temperature + "°C";
+        }
+
+        var updateWind = function (direction, description) {
+            var windIcon = document.querySelector("#wind-icon use");
+            var windLabel = document.querySelector("#wind-label");
+
+            windIcon.style.transformOrigin = "center";
+            windIcon.style.transition = "transform 1s ease";
+            windIcon.style.transform = "rotate(" + direction + "deg)";
+            windLabel.textContent = description;
+        }
+
+        setTimeout(() => {
+            updateWeather("sun-overcast", "Slightly overcast");
+            updateTemperature(30);
+            updateWind("115", "4 < 5 Bft");
+        }, 3000);
     </script>
 </body>
 
