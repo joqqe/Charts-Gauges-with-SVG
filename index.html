@@ -16,7 +16,7 @@
                 <use xlink:href="/icons/_icons.svg#sun"></use>
             </svg>
 
-            <h4 id="weather-label" class="overview-label">Light rain</h4>
+            <h4 id="weather-label" class="overview-label">Sun</h4>
         </div>
 
         <div id="temp">
@@ -27,7 +27,7 @@
                         d="m50 15c-5.54 0-10 4.46-10 10v33.844a15 15 0 0 0-5 11.156 15 15 0 0 0 15 15 15 15 0 0 0 15-15 15 15 0 0 0-5-11.16v-33.84c0-5.54-4.46-10-10-10z"
                         fill="none" stroke="#000018" stroke-width="1.0016" />
                     <rect id="bar" x="45" y="290.54" width="10" height="45" ry="5" fill="#00f" />
-                    <circle cx="50" cy="340.54" r="10" fill="#00f" />
+                    <circle id="circle" cx="50" cy="340.54" r="10" fill="#00f" />
                     <g fill="none" stroke="#000" stroke-width="1px">
                         <path d="m60 300.54h5" />
                         <path d="m60 310.54h5" />
@@ -36,7 +36,7 @@
                 </g>
             </svg>
 
-            <h4 id="temp-label" class="overview-label">20°C</h4>
+            <h4 id="temp-label" class="overview-label">? °C</h4>
         </div>
 
         <div id="wind">
@@ -45,7 +45,7 @@
                 </use>
             </svg>
 
-            <h4 id="wind-label" class="overview-label">0 Bft</h4>
+            <h4 id="wind-label" class="overview-label">? Bft</h4>
         </div>
     </div>
 
@@ -72,21 +72,34 @@
 
         var updateTemperature = function (temperature) {
             var tempIcon = document.querySelector("#temp-icon #bar");
+            var tempCircle = document.querySelector("#temp-icon #circle");
             var tempLabel = document.querySelector("#temp-label");
 
+            var maxTemp = 30;
+            var minTemp = 0;
             var tempIconC = tempIcon.getBBox();
             var tempIconXOrigin = tempIconC.x + tempIconC.width;
             var tempIconYOrigin = tempIconC.y + tempIconC.height;
-            tempIcon.style.transformOrigin = tempIconXOrigin + "px " + tempIconYOrigin + "px";
-            tempIcon.style.transition = "transform 1s ease";
+            var tempPercentage = temperature / (maxTemp - minTemp);
+            var scalePercentage = (tempPercentage / 1.2) + (1 - (1 / 1.2));
+            var fColor;
 
-            //percentage * (maxHue - minHue) + minHue
-            var scalePercent = temperature / (30 - 0);
-            var iets = (scalePercent / 1.2) * scalePercent;
-            console.log(scalePercent)
-            console.log(iets)
-            tempIcon.style.transform = "scaleY(" + iets + ")";
-            tempIcon.style.fill = "red";
+            tempIcon.style.transformOrigin = tempIconXOrigin + "px " + tempIconYOrigin + "px";
+            tempIcon.style.transform = "scaleY(" + scalePercentage + ")";
+            tempIcon.style.transition = "transform 1s ease, fill  1s ease";
+            tempCircle.style.transition = "transform 1s ease, fill  1s ease";
+            
+            if (temperature <= (maxTemp / 3)) {
+                fColor = "blue";
+            }
+            if (temperature > (maxTemp / 3) && temperature < (maxTemp / 3) * 2) {
+                fColor = "orange";
+            }
+            if (temperature >= (maxTemp / 3) * 2) {
+                fColor = "red";
+            }
+            tempIcon.style.fill = fColor;
+            tempCircle.style.fill = fColor;
             tempLabel.textContent = temperature + "°C";
         }
 
@@ -102,7 +115,7 @@
 
         setTimeout(() => {
             updateWeather("sun-overcast", "Slightly overcast");
-            updateTemperature(30);
+            updateTemperature(11);
             updateWind("115", "4 < 5 Bft");
         }, 3000);
     </script>
