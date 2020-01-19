@@ -75,7 +75,8 @@ body {
     border-radius: 0 16px 16px 0;
 }
 
-#forecast #forecast-controls > *:hover {
+#forecast #forecast-controls > *:hover,
+#forecast #forecast-controls .forecast-control-active {
     background-color: white;
     color: #293a4b;
 }
