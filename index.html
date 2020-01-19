@@ -87,8 +87,8 @@
 
             tempIcon.style.transformOrigin = tempIconXOrigin + "px " + tempIconYOrigin + "px";
             tempIcon.style.transform = "scaleY(" + scalePercentage + ")";
-            tempIcon.style.transition = "transform 1s ease, fill  1s ease";
-            tempCircle.style.transition = "transform 1s ease, fill  1s ease";
+            tempIcon.style.transition = "transform 2s ease, fill  1s ease";
+            tempCircle.style.transition = "transform 2s ease, fill  1s ease";
 
             if (temperature <= (maxTemp / 3)) {
                 fColor = "blue";
@@ -109,7 +109,7 @@
             var windLabel = document.querySelector("#wind-label");
 
             windIcon.style.transformOrigin = "center";
-            windIcon.style.transition = "transform 1s ease";
+            windIcon.style.transition = "transform 2s ease";
             windIcon.style.transform = "rotate(" + direction + "deg)";
             windLabel.textContent = description;
         }
@@ -124,8 +124,8 @@
             var chartPosition = { xMin: 45, xMax: viewBox.width - 15, yMin: 15, yMax: viewBox.height - 45 };
                 xSubdivide = data.length,
                 ySubdivide = 5,
-                scale= { min: 0, max: 30 };
-                columnWidth = (chartPosition.xMax - chartPosition.xMin) / xSubdivide;
+                scale = { min: Math.floor(Math.min(...data.map(x => x.value)) / 5) * 5, max: Math.ceil(Math.max(...data.map(x => x.value)) / 5) * 5 };
+            columnWidth = (chartPosition.xMax - chartPosition.xMin) / xSubdivide;
 
             for (let i = 0; i < ySubdivide; i++) {
                 // Horizontal lines
@@ -144,9 +144,9 @@
                 // Y axis
                 var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
                 var x = chartPosition.xMin - 40;
-                var y = (i - 0) * (chartPosition.yMax - chartPosition.yMin) / ((ySubdivide - 1) - 0) + chartPosition.yMin;
+                var y = (chartPosition.yMax - chartPosition.yMin) - (i - 0) * (chartPosition.yMax - chartPosition.yMin) / ((ySubdivide - 1) - 0) + chartPosition.yMin;
 
-                text.textContent = ((scale.max - scale.min) / (ySubdivide - 1)) * i + type;
+                text.textContent = ((scale.max - scale.min) / (ySubdivide - 1)) * i + scale.min  + type;
                 text.setAttribute("font-size", "10");
                 text.setAttribute("x", x);
                 text.setAttribute("y", y + 3.5);
@@ -154,12 +154,14 @@
                 forecastChart.append(text);
             }
 
-            var d = "M ",
-                path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            var d = "M ";
+            var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
             path.style.stroke = "black";
             path.style.strokeWidth = "1.0";
             path.style.fill = "none";
-            
+            path.style.strokeDasharray = "650";
+            path.style.animation = "dash 2s ease";
+
             for (let i = 0; i < xSubdivide; i++) {
                 // X axis
                 var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -176,7 +178,7 @@
 
                 // Line
                 var x = (chartPosition.xMin + columnWidth / 2) + (columnWidth * i);
-                var y = (data[i].value - scale.min) * (chartPosition.yMax - chartPosition.yMin) / (scale.max - scale.min) + chartPosition.yMin;
+                var y = (chartPosition.yMax - chartPosition.yMin) - (data[i].value - scale.min) * (chartPosition.yMax - chartPosition.yMin) / (scale.max - scale.min) + chartPosition.yMin;
 
                 if (i === 0) {
                     d += x + " " + y;
@@ -191,7 +193,7 @@
 
                 var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
                 title.textContent = data[i].date + "\n" + data[i].value + type;
-                
+
                 circle.append(title);
                 forecastChart.append(circle);
             }
@@ -200,7 +202,7 @@
             forecastChart.prepend(path);
         }
 
-        setInterval(() => {
+        var init = function () {
             updateWeather("sun-overcast", "Slightly overcast");
             updateTemperature(Math.round(Math.random() * 30));
             updateWind(Math.round(Math.random() * 360), Math.round(Math.random() * 5) + " Bft");
@@ -213,7 +215,13 @@
                 { date: "6/01", value: Math.round(Math.random() * 30) },
                 { date: "7/01", value: Math.round(Math.random() * 30) }
             ], "°C");
-        }, 3000);
+        }
+
+        init();
+
+        setInterval(() => {
+            init();
+        }, 10000);
     </script>
 </body>
 

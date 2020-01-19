@@ -84,3 +84,12 @@ body {
 #forecast #forecast-chart {
     margin-top: 3rem;
 }
+
+@keyframes dash {
+    from {
+        stroke-dashoffset: 650;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
