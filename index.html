@@ -122,27 +122,75 @@
             windLabel.textContent = description;
         }
 
-        var updateChart = function () {
+        var updateChart = function (data) {
             var forecastChart = document.querySelector("#forecast-chart");
-            
+
             var lowestBar = document.querySelector("#forecast-chart path:last-child");
             var lowestBarC = lowestBar.getBBox();
             var highestBar = document.querySelector("#forecast-chart path:first-child");
             var highestBarC = highestBar.getBBox();
-            
-            var columnWidth = lowestBarC.width / 7;
+
+            var xSubdivide = data.length;
+            var ySubdivide = 5;
+            var columnWidth = lowestBarC.width / xSubdivide;
 
             var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
             path.style.stroke = "black";
             path.style.strokeWidth = "1.0";
             path.style.fill = "none";
 
-            var d = "M " + (lowestBarC.x + columnWidth / 2) + " " + lowestBarC.y;
-            for (let i = 1; i < 7; i++) {
-                d += " L " + (lowestBarC.x  + (columnWidth / 2) + (columnWidth * i)) + " " + (Math.random() * 30 + 50);
+            // X axis
+            for (let i = 0; i < xSubdivide; i++) {
+                var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.textContent = data[i].date;
+                text.setAttribute("font-size", "10");
+
+                var x = (lowestBarC.x + columnWidth / 3) + (columnWidth * i);
+                var y = lowestBarC.y + 25;
+
+                text.setAttribute("x", x);
+                text.setAttribute("y", y);
+
+                forecastChart.append(text);
+            }
+
+            // Y axis
+            for (let i = 0; i < ySubdivide; i++) {
+                var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.textContent = ((30 - 0) / (ySubdivide - 1)) * i + "°C";
+                text.setAttribute("font-size", "10");
+
+                var x = lowestBarC.x - 40;
+                var y = (i + 1 - 0) * (highestBarC.y - lowestBarC.y) / (ySubdivide - 0) + lowestBarC.y;
+
+                text.setAttribute("x", x);
+                text.setAttribute("y", y);
+
+                forecastChart.append(text);
+            }
+
+            // Line
+            var d = "M ";
+            for (let i = 0; i < xSubdivide; i++) {
+                var x = (lowestBarC.x + columnWidth / 2) + (columnWidth * i);
+                var y = (data[i].value - 0) * (highestBarC.y - lowestBarC.y) / (30 - 0) + lowestBarC.y;
+
+                if (i === 0) {
+                    d += x + " " + y;
+                } else {
+                    d += " L " + x + " " + y;
+                }
+
+                var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("r", 2.5);
+                circle.setAttribute("cx", x);
+                circle.setAttribute("cy", y);
+                var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+                title.textContent = data[i].value + "°C";
+                circle.append(title);
+                forecastChart.append(circle);
             }
             path.setAttribute("d", d);
-
             forecastChart.prepend(path);
         }
 
@@ -150,7 +198,15 @@
             updateWeather("sun-overcast", "Slightly overcast");
             updateTemperature(15);
             updateWind("115", "4 < 5 Bft");
-            updateChart();
+            updateChart([
+                { date: "1/01", value: 15 },
+                { date: "2/01", value: 30 },
+                { date: "3/01", value: 0 },
+                { date: "4/01", value: 5 },
+                { date: "5/01", value: 10 },
+                { date: "6/01", value: 15 },
+                { date: "7/01", value: 20 }
+            ]);
         }, 1500);
     </script>
 </body>
