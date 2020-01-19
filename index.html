@@ -131,19 +131,20 @@
                 // Horizontal lines
                 var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
                 var x = chartPosition.xMin;
-                var y = (i - chartPosition.yMin) * (chartPosition.yMax - chartPosition.yMin) / (ySubdivide - 0) + chartPosition.yMin;
+                var y = (i - 0) * (chartPosition.yMax - chartPosition.yMin) / ((ySubdivide - 1) - 0) + chartPosition.yMin;
                 var l = chartPosition.xMax - chartPosition.xMin;
 
                 path.style.stroke = "909090";
                 path.style.strokeWidth = "0.5";
                 path.style.fill = "none";
                 path.setAttribute("d", "m" + x + " " + y + "h" + l);
+
                 forecastChart.append(path);
 
                 // Y axis
                 var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
                 var x = chartPosition.xMin - 40;
-                var y = (i - chartPosition.yMin) * (chartPosition.yMax - chartPosition.yMin) / (ySubdivide - 1 - 0) + chartPosition.yMin;
+                var y = (i - 0) * (chartPosition.yMax - chartPosition.yMin) / ((ySubdivide - 1) - 0) + chartPosition.yMin;
 
                 text.textContent = ((scale.max - scale.min) / (ySubdivide - 1)) * i + type;
                 text.setAttribute("font-size", "10");
@@ -187,8 +188,10 @@
                 circle.setAttribute("r", 2.5);
                 circle.setAttribute("cx", x);
                 circle.setAttribute("cy", y);
+
                 var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
                 title.textContent = data[i].date + "\n" + data[i].value + type;
+                
                 circle.append(title);
                 forecastChart.append(circle);
             }
