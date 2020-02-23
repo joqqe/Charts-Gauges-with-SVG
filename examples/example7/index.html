@@ -1,16 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <style>
+        svg {
+            width: 100%;
+            height: 100%;
+            max-height: 100vh;
+        }
+    </style>
 </head>
+
 <body>
-    <svg id="forecast-chart" version="1.1" viewBox="0 0 450 150" xmlns="http://www.w3.org/2000/svg"></svg>
-    
+    <svg id="forecast-chart" version="1.1" viewBox="0 0 450 150" xmlns="http://www.w3.org/2000/svg">
+        <text x="10" y="13" style="font-size: 10px;">30°C</text>
+        <line x1="50" y1="10" x2="440" y2="10" style="stroke:black;stroke-width:0.5px" />
+
+        <text x="10" y="43" style="font-size: 10px;">20°C</text>
+        <line x1="50" y1="40" x2="440" y2="40" style="stroke:black;stroke-width:0.5px" />
+
+        <text x="10" y="73" style="font-size: 10px;">10°C</text>
+        <line x1="50" y1="70" x2="440" y2="70" style="stroke:black;stroke-width:0.5px" />
+
+        <text x="10" y="103" style="font-size: 10px;">0°C</text>
+        <line x1="50" y1="100" x2="440" y2="100" style="stroke:black;stroke-width:0.5px" />
+
+        <text x="70" y="130" style="font-size: 10px;">1/01</text>
+        <text x="125" y="130" style="font-size: 10px;">2/01</text>
+        <text x="180" y="130" style="font-size: 10px;">3/01</text>
+        <text x="235" y="130" style="font-size: 10px;">4/01</text>
+        <text x="290" y="130" style="font-size: 10px;">5/01</text>
+        <text x="345" y="130" style="font-size: 10px;">6/01</text>
+        <text x="400" y="130" style="font-size: 10px;">7/01</text>
+
+        <polyline points="75,100 130,50 185,100 240,50 295,100 350,50 405,100"
+            style="fill:none;stroke:black;stroke-width:2px" />
+    </svg>
+
 
     <script>
+        var mapValueToScale = function (value, oldMin, oldMax, newMin, newMax) {
+            return (newMax - newMin) - (value - oldMin) * (newMax - newMin) / (oldMax - oldMin) + newMin;
+        }
+
+        var svg = document.querySelector("svg");
+
+        var points = "";
+        for (let i = 0; i < 7; i++) {
+            var temp = Math.round(Math.random() * 30);
+            var yValue = mapValueToScale(temp, 0, 30, 10, 100);
+            var xValue = 75 + (55 * i);
+
+            points += xValue + "," + yValue + " ";
+
+            // Dot
+            var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("r", 2.5);
+            circle.setAttribute("cx", xValue);
+            circle.setAttribute("cy", yValue);
+
+            // Title
+            var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+            title.textContent = temp + "°C";
+
+            circle.append(title);
+            svg.append(circle);
+        }
+
+        var polyline = svg.querySelector("polyline");
+        polyline.setAttribute("points", points);
+
         
+        polyline.style.strokeDasharray = polyline.getTotalLength();
+        polyline.style.strokeDashoffset = polyline.getTotalLength();
+        setTimeout(() => {
+            polyline.style.transition = "stroke-dashoffset 1.5s ease";
+            polyline.style.strokeDashoffset = "0";
+        });
     </script>
 </body>
+
 </html>
