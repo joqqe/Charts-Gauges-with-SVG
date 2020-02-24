@@ -18,12 +18,12 @@
     </style>
 </head>
 <body>
-    <svg id="wind-icon" height="100" width="100">
-        <use xlink:href="../../icons/_icons.svg#wind"></use>
+    <svg id="wind-icon" height="100" width="100" viewBox="0 0 100 100">
+        <path d="m35 75 15-50 15 50-15-10z" fill="none" stroke="#000" stroke-width="1.0016"/>
     </svg>
 
     <script>
-        var windIcon = document.querySelector("#wind-icon use");
+        var windIcon = document.querySelector("#wind-icon path");
 
         windIcon.style.transformOrigin = "center";
         windIcon.style.transition = "transform 2s ease";
